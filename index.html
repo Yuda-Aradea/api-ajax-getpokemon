@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Menampilkan data dengan API</title>
+    <style>
+      body {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      button {
+        background-color: yellow;
+        width: 80px;
+        height: 50px;
+        border-radius: 8px;
+        border: 1px solid grey;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: rgb(233, 233, 19);
+      }
+      #result {
+        margin-top: 80px;
+        display: flex;
+        justify-content: center;
+        width: 85%;
+      }
+      .pikachu {
+        background-color: rgb(235, 214, 27);
+        border-radius: 18px;
+        color: white;
+        width: 250px;
+        height: 350px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        display: none;
+      }
+
+      .pikachu.grass {
+        background-color: #8dd694;
+        color: #333;
+        border: 4px solid #5dad65;
+      }
+
+      .pikachu.fire {
+        background-color: #e69d8d;
+        color: #fff;
+        border: 4px solid #c67d6d;
+      }
+
+      .pikachu.water {
+        background-color: #8dc6e6;
+        color: #fff;
+        border: 4px solid #6f9eca;
+      }
+
+      .pikachu.bug {
+        background-color: #bddd7a;
+        color: #333;
+        border: 4px solid #a2c170;
+      }
+
+      .pikachu.normal {
+        background-color: #b1b1b1;
+        color: #fff;
+        border: 4px solid #959595;
+      }
+
+      .pikachu.poison {
+        background-color: #a55db1;
+        color: #fff;
+        border: 4px solid #8a4a95;
+      }
+
+      .pikachu.electric {
+        background-color: #e7c859;
+        color: #fff;
+        border: 4px solid #d0b34a;
+      }
+
+      .pikachu.ground {
+        background-color: #efb385;
+        color: #fff;
+        border: 4px solid #d0a068;
+      }
+
+      .pikachu.fairy {
+        background-color: #eea1e2;
+        color: #fff;
+        border: 4px solid #c77fbc;
+      }
+
+      .pokemon.active .pikachu {
+        display: block;
+      }
+
+      .pokemon {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      p {
+        font-size: 22px;
+      }
+      img {
+        width: 200px;
+      }
+      h3 {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dapatkan Pokemon</h1>
+
+    <button id="pokemon" type="button" onclick="fetchData()">GET</button>
+
+    <div id="result" class="pokemon active"></div>
+
+    <script>
+      // fetch
+      async function fetchData() {
+        const respone = await fetch('https://pokeapi.co/api/v2/pokemon?limit=36', {
+          method: 'GET',
+        });
+
+        const json = await respone.json();
+        const results = json.results;
+
+        let data = '';
+
+        for (i = 0; i < results.length; i++) {
+          data = results[i];
+          console.log(data);
+          const detail = await fetch(data.url, {
+            method: 'GET',
+          });
+          const pokemonDetail = await detail.json();
+
+          document
+            .getElementById('result')
+            .insertAdjacentHTML(
+              'beforeend',
+              `<div class="pikachu ${pokemonDetail.types[0].type.name}"> <p>${pokemonDetail.id}: ${pokemonDetail.name}</p> <img src="${pokemonDetail.sprites.front_default}"/> <h3>Type: ${pokemonDetail.types[0].type.name}</h3>  </div>`
+            );
+        }
+      }
+    </script>
+  </body>
+</html>
